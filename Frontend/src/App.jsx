@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Mail, ChevronDown, ChevronUp, User, Briefcase, Phone, MessageSquare, Calendar, Clock, Filter, Layers, ArrowUpDown, Search, X, Moon, Sun, Trash2, Grid, List, LayoutGrid, FileText, RefreshCw } from 'lucide-react';
+import { Mail, ChevronDown, ChevronUp, User, Briefcase, Phone, MessageSquare, Calendar, Clock, Filter, Layers, ArrowUpDown, Search, X, Moon, Sun, Trash2, Grid, List, LayoutGrid, FileText, RefreshCw, Download, BarChart3, TrendingUp, Users, Activity } from 'lucide-react';
+import axios from 'axios';
 
-    const API_BASE_URL = 'http://localhost:8080/api/clients/';
+    const API_BASE_URL = 'http://localhost:8080/api/emails';
 
 export default function App() {
     const [emails, setEmails] = useState([]);
@@ -16,21 +17,84 @@ export default function App() {
     const [searchQuery, setSearchQuery] = useState('');
     const [darkMode, setDarkMode] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(null); // Store email id to delete
-    const [viewMode, setViewMode] = useState('table'); // 'table', 'card', 'compact', 'messages'
+    const [deleteStatus, setDeleteStatus] = useState(null); // 'deleting', 'success', 'error'
+    const [deleteMessage, setDeleteMessage] = useState('');
+    const [viewMode, setViewMode] = useState('table'); // 'table', 'card', 'compact', 'messages', 'stats'
     const headerRef = useRef(null);
     const cardRef = useRef(null);
     const rowsRef = useRef([]);
 
+    // Calculate statistics
+    const calculateStats = () => {
+        if (emails.length === 0) return null;
+
+        // Total submissions
+        const totalSubmissions = emails.length;
+
+        // Submissions by date
+        const submissionsByDate = emails.reduce((acc, email) => {
+            const date = email.date || 'Unknown';
+            acc[date] = (acc[date] || 0) + 1;
+            return acc;
+        }, {});
+
+        // Most common business types
+        const businessTypes = emails.reduce((acc, email) => {
+            const business = email.business?.trim() || 'Not Specified';
+            if (business) {
+                acc[business] = (acc[business] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        // Peak submission times
+        const submissionsByHour = emails.reduce((acc, email) => {
+            if (email.time) {
+                const hour = parseInt(email.time.split(':')[0]);
+                acc[hour] = (acc[hour] || 0) + 1;
+            }
+            return acc;
+        }, {});
+
+        // Recent submissions (last 7 days)
+        const today = new Date();
+        const last7Days = emails.filter(email => {
+            if (!email.date) return false;
+            const emailDate = new Date(email.date);
+            const diffTime = today - emailDate;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            return diffDays <= 7;
+        }).length;
+
+        return {
+            totalSubmissions,
+            submissionsByDate,
+            businessTypes,
+            submissionsByHour,
+            last7Days,
+            topBusinesses: Object.entries(businessTypes)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5),
+            peakHour: Object.entries(submissionsByHour)
+                .sort((a, b) => b[1] - a[1])[0]
+        };
+    };
+
+    const stats = calculateStats();
+
     useEffect(() => {
         setMounted(true);
         fetchClients();
+
     }, []);
 
     const fetchClients = async () => {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(API_BASE_URL);
+            const response = await fetch(API_BASE_URL, {
+                credentials: 'include',
+            });
             if (!response.ok) {
                 throw new Error('Failed to fetch clients');
             }
@@ -136,39 +200,101 @@ export default function App() {
         }
     };
 
-    const handleDeleteClick = (emailId, event) => {
+    const handleDeleteClick = (emailAddress, event) => {
         event.stopPropagation(); // Prevent row expansion
-        setDeleteConfirm(emailId);
+        setDeleteConfirm(emailAddress);
     };
 
     const confirmDelete = async () => {
         if (!deleteConfirm) return;
 
+        setDeleteStatus('deleting');
+        setDeleteMessage('Deleting...');
+
         try {
-            const response = await fetch(`${API_BASE_URL}${deleteConfirm}`, {
-                method: 'DELETE',
+            console.log('Deleting email:', deleteConfirm);
+            
+            const response = await axios.delete("http://localhost:8080/api/contactdelete", {
+                data: { email: deleteConfirm },
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                withCredentials: true
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to delete client');
-            }
+            console.log('Delete response:', response.data);
 
             // Remove from local state
-            setEmails(emails.filter(email => email.id !== deleteConfirm));
+            setEmails(emails.filter(email => email.email !== deleteConfirm));
             setExpandedRows(prev => {
                 const newSet = new Set(prev);
-                newSet.delete(deleteConfirm);
+                // Find the ID of the email being deleted to remove from expanded rows
+                const emailToDelete = emails.find(e => e.email === deleteConfirm);
+                if (emailToDelete) {
+                    newSet.delete(emailToDelete.id);
+                }
                 return newSet;
             });
-            setDeleteConfirm(null);
+            
+            setDeleteStatus('success');
+            setDeleteMessage('Email deleted successfully!');
+            
+            // Auto close after 1.5 seconds
+            setTimeout(() => {
+                setDeleteConfirm(null);
+                setDeleteStatus(null);
+                setDeleteMessage('');
+            }, 1500);
         } catch (err) {
             console.error('Error deleting client:', err);
-            alert('Failed to delete email. Please try again.');
+            setDeleteStatus('error');
+            setDeleteMessage(err.response?.data?.error || err.message || 'Failed to delete email');
         }
     };
 
     const cancelDelete = () => {
         setDeleteConfirm(null);
+        setDeleteStatus(null);
+        setDeleteMessage('');
+    };
+
+    const exportToCSV = () => {
+        if (sortedEmails.length === 0) {
+            alert('No emails to export');
+            return;
+        }
+
+        // CSV headers
+        const headers = ['Name', 'Email', 'Business', 'Contact', 'Message', 'Date', 'Time'];
+        
+        // Convert emails to CSV rows
+        const csvRows = sortedEmails.map(email => [
+            `"${email.name || ''}"`,
+            `"${email.email || ''}"`,
+            `"${email.business || ''}"`,
+            `"${email.contact || ''}"`,
+            `"${(email.message || '').replace(/"/g, '""')}"`, // Escape quotes in message
+            `"${email.date || ''}"`,
+            `"${email.time || ''}"`
+        ].join(','));
+
+        // Combine headers and rows
+        const csvContent = [headers.join(','), ...csvRows].join('\n');
+
+        // Create blob and download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `email-submissions-${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log(`Exported ${sortedEmails.length} emails to CSV`);
     };
 
     return (
@@ -236,6 +362,21 @@ export default function App() {
                                 <span className="text-xs font-medium">Compact</span>
                             </button>
                             
+                            <button
+                                onClick={() => setViewMode('stats')}
+                                className={`p-3 rounded-lg transition-all duration-300 flex flex-col items-center gap-1 ${
+                                    viewMode === 'stats'
+                                        ? 'bg-blue-600 text-white shadow-md'
+                                        : darkMode
+                                            ? 'text-gray-300 hover:bg-gray-700'
+                                            : 'text-gray-600 hover:bg-gray-100'
+                                }`}
+                                title="Statistics"
+                            >
+                                <BarChart3 className="w-5 h-5" />
+                                <span className="text-xs font-medium">Stats</span>
+                            </button>
+                            
                         </div>
                     </div>
                 )}
@@ -258,9 +399,14 @@ export default function App() {
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-3">
-                                <Mail className="w-8 h-8 animate-pulse" />
+                                <div className="relative">
+                                    <Mail className="w-8 h-8 animate-pulse" />
+                                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full flex items-center justify-center">
+                                        <span className="text-blue-600 text-xs font-bold">?</span>
+                                    </div>
+                                </div>
                                 <div>
-                                    <h1 className="text-3xl font-bold">Thumbeja Publicity</h1>
+                                    <h1 className="text-3xl font-bold">Enquiry</h1>
                                     <p className={`mt-1 ${darkMode ? 'text-gray-300' : 'text-blue-100'}`}>
                                         {loading ? 'Loading...' : error ? 'Error loading data' : `${emails.length} total submissions`}
                                     </p>
@@ -272,22 +418,22 @@ export default function App() {
                                 <button
                                     onClick={fetchClients}
                                     disabled={loading}
-                                    className={`p-3 rounded-lg transition-all duration-300 ${
+                                    className={`p-3 rounded-full transition-all duration-300 ${
                                         darkMode 
-                                            ? 'bg-gray-600 hover:bg-gray-500' 
-                                            : 'bg-white bg-opacity-20 hover:bg-opacity-30'
+                                            ? 'bg-white-600 hover:bg-gray-500' 
+                                            : 'bg-white  bg-opacity-20 hover:bg-opacity-30'
                                     } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     title="Refresh emails"
                                 >
-                                    <RefreshCw className={`w-6 h-6 text-white ${loading ? 'animate-spin' : ''}`} />
+                                    <RefreshCw className={`w-6 h-6 text-white-600 ${loading ? 'animate-spin' : ''} ${darkMode ? 'text-white-600' : 'text-gray-600'}`} />
                                 </button>
                                 
                                 {/* Dark Mode Toggle */}
                                 <button
                                     onClick={() => setDarkMode(!darkMode)}
-                                    className={`p-3 rounded-lg transition-colors duration-300 ${
+                                    className={`p-3 rounded-full transition-colors duration-300 ${
                                         darkMode 
-                                            ? 'bg-gray-600 hover:bg-gray-500' 
+                                            ? 'bg-white-600 hover:bg-gray-500' 
                                             : 'bg-white bg-opacity-20 hover:bg-opacity-30'
                                     }`}
                                     title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -295,7 +441,7 @@ export default function App() {
                                     {darkMode ? (
                                         <Sun className="w-6 h-6 text-yellow-300" />
                                     ) : (
-                                        <Moon className="w-6 h-6 text-blue-300" />
+                                        <Moon className="w-6 h-6 text-gray-600" />
                                     )}
                                 </button>
                             </div>
@@ -499,20 +645,42 @@ export default function App() {
                                 </button>
                                 </div>
 
-                                {/* Messages Only Button - Right Side */}
-                                <button
-                                    onClick={() => setViewMode(viewMode === 'messages' ? 'table' : 'messages')}
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all duration-300 flex items-center gap-2 ${
-                                        viewMode === 'messages'
-                                            ? 'bg-purple-600 text-white border-purple-600'
-                                            : darkMode
+                                {/* Right Side Buttons */}
+                                <div className="flex items-center gap-3">
+                                    {/* Export Button */}
+                                    <button
+                                        onClick={exportToCSV}
+                                        disabled={loading || emails.length === 0}
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all duration-300 flex items-center gap-2 ${
+                                            (loading || emails.length === 0)
+                                                ? 'opacity-50 cursor-not-allowed'
+                                                : ''
+                                        } ${
+                                            darkMode
                                                 ? 'bg-gray-600 text-gray-200 hover:bg-gray-500 border-gray-500'
                                                 : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-300'
-                                    }`}
-                                >
-                                    <FileText className="w-4 h-4" />
-                                    Messages Only
-                                </button>
+                                        }`}
+                                        title="Export to CSV"
+                                    >
+                                        <Download className="w-4 h-4" />
+                                        Export CSV
+                                    </button>
+
+                                    {/* Messages Only Button */}
+                                    <button
+                                        onClick={() => setViewMode(viewMode === 'messages' ? 'table' : 'messages')}
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all duration-300 flex items-center gap-2 ${
+                                            viewMode === 'messages'
+                                                ? 'bg-purple-600 text-white border-purple-600'
+                                                : darkMode
+                                                    ? 'bg-gray-600 text-gray-200 hover:bg-gray-500 border-gray-500'
+                                                    : 'bg-white text-gray-700 hover:bg-gray-100 border-gray-300'
+                                        }`}
+                                    >
+                                        <FileText className="w-4 h-4" />
+                                        Messages Only
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Results count */}
@@ -553,8 +721,82 @@ export default function App() {
                         </div>
                     )}
 
+                    {/* Empty State - View Specific */}
+                    {!loading && !error && sortedEmails.length === 0 && (
+                        <div className="p-12 text-center">
+                            {/* Icon based on view mode */}
+                            {viewMode === 'table' && <List className={`w-16 h-16 mx-auto mb-4 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />}
+                            {viewMode === 'card' && <Grid className={`w-16 h-16 mx-auto mb-4 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />}
+                            {viewMode === 'compact' && <Layers className={`w-16 h-16 mx-auto mb-4 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />}
+                            {viewMode === 'messages' && <MessageSquare className={`w-16 h-16 mx-auto mb-4 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />}
+                            {viewMode === 'stats' && <BarChart3 className={`w-16 h-16 mx-auto mb-4 ${darkMode ? 'text-gray-600' : 'text-gray-300'}`} />}
+                            
+                            <h3 className={`text-xl font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                {viewMode === 'table' && 'No Entries in Table'}
+                                {viewMode === 'card' && 'No Cards to Display'}
+                                {viewMode === 'compact' && 'No Items Found'}
+                                {viewMode === 'messages' && 'No Messages Available'}
+                                {viewMode === 'stats' && 'No Data for Statistics'}
+                            </h3>
+                            
+                            <p className={`mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                {searchQuery ? (
+                                    <>
+                                        {viewMode === 'table' && `No table entries match your search "${searchQuery}"`}
+                                        {viewMode === 'card' && `No cards found matching "${searchQuery}"`}
+                                        {viewMode === 'compact' && `No items match "${searchQuery}"`}
+                                        {viewMode === 'messages' && `No messages contain "${searchQuery}"`}
+                                        {viewMode === 'stats' && `No data available for "${searchQuery}"`}
+                                    </>
+                                ) : filterType !== 'all' ? (
+                                    <>
+                                        {viewMode === 'table' && `No ${filterType} entries in the table`}
+                                        {viewMode === 'card' && `No ${filterType} cards to show`}
+                                        {viewMode === 'compact' && `No ${filterType} items found`}
+                                        {viewMode === 'messages' && `No ${filterType} messages available`}
+                                        {viewMode === 'stats' && `No ${filterType} data for analysis`}
+                                    </>
+                                ) : (
+                                    <>
+                                        {viewMode === 'table' && 'Your enquiry table is empty. New submissions will appear here in a structured format.'}
+                                        {viewMode === 'card' && 'No enquiry cards yet. Submissions will be displayed as interactive cards here.'}
+                                        {viewMode === 'compact' && 'No enquiries to show. This compact view will list all submissions efficiently.'}
+                                        {viewMode === 'messages' && 'No messages received yet. Customer enquiries will appear here for easy reading.'}
+                                        {viewMode === 'stats' && 'No statistics available. Data insights will be generated once you receive enquiries.'}
+                                    </>
+                                )}
+                            </p>
+                            
+                            {/* Action buttons */}
+                            {(searchQuery || filterType !== 'all') ? (
+                                <button
+                                    onClick={() => {
+                                        setSearchQuery('');
+                                        setFilterType('all');
+                                    }}
+                                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                >
+                                    Clear Filters
+                                </button>
+                            ) : (
+                                <div className="flex flex-col items-center gap-3 mt-4">
+                                    <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                        Waiting for customer enquiries...
+                                    </p>
+                                    <button
+                                        onClick={fetchClients}
+                                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
+                                    >
+                                        <RefreshCw className="w-4 h-4" />
+                                        Refresh
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     {/* Table View */}
-                    {!loading && !error && viewMode === 'table' && (
+                    {!loading && !error && sortedEmails.length > 0 && viewMode === 'table' && (
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
@@ -638,7 +880,7 @@ export default function App() {
                                         }`}>{email.time}</td>
                                         <td className="px-6 py-4">
                                             <button
-                                                onClick={(e) => handleDeleteClick(email.id, e)}
+                                                onClick={(e) => handleDeleteClick(email.email, e)}
                                                 className={`p-2 rounded-lg transition-all duration-300 ${
                                                     darkMode
                                                         ? 'text-red-400 hover:bg-red-900 hover:text-red-300'
@@ -802,7 +1044,7 @@ export default function App() {
                     )}
 
                     {/* Card View */}
-                    {!loading && !error && viewMode === 'card' && (
+                    {!loading && !error && sortedEmails.length > 0 && viewMode === 'card' && (
                         <div className="p-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {sortedEmails.map((email, index) => (
@@ -824,7 +1066,7 @@ export default function App() {
                                                     <h3 className="text-lg font-bold text-white truncate">{email.name}</h3>
                                                 </div>
                                                 <button
-                                                    onClick={(e) => handleDeleteClick(email.id, e)}
+                                                    onClick={(e) => handleDeleteClick(email.email, e)}
                                                     className="p-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300"
                                                     title="Delete email"
                                                 >
@@ -890,7 +1132,7 @@ export default function App() {
                     )}
 
                     {/* Compact View */}
-                    {!loading && !error && viewMode === 'compact' && (
+                    {!loading && !error && sortedEmails.length > 0 && viewMode === 'compact' && (
                         <div className="p-6">
                             <div className="space-y-2">
                                 {sortedEmails.map((email, index) => (
@@ -953,7 +1195,7 @@ export default function App() {
                                             </div>
                                             
                                             <button
-                                                onClick={(e) => handleDeleteClick(email.id, e)}
+                                                onClick={(e) => handleDeleteClick(email.email, e)}
                                                 className={`p-2 rounded-lg transition-all duration-300 flex-shrink-0 ${
                                                     darkMode
                                                         ? 'text-red-400 hover:bg-red-900 hover:text-red-300'
@@ -1000,7 +1242,7 @@ export default function App() {
                     )}
 
                     {/* Messages Only View */}
-                    {!loading && !error && viewMode === 'messages' && (
+                    {!loading && !error && sortedEmails.length > 0 && viewMode === 'messages' && (
                         <div className="p-6">
                             <div className="max-w-4xl mx-auto space-y-4">
                                 {sortedEmails.map((email, index) => (
@@ -1063,7 +1305,7 @@ export default function App() {
                                                     </div>
                                                 </div>
                                                 <button
-                                                    onClick={(e) => handleDeleteClick(email.id, e)}
+                                                    onClick={(e) => handleDeleteClick(email.email, e)}
                                                     className={`p-2 rounded-lg transition-all duration-300 ${
                                                         darkMode
                                                             ? 'text-red-400 hover:bg-red-900 hover:text-red-300'
@@ -1113,7 +1355,7 @@ export default function App() {
                     )}
 
                     {/* Messages Only View */}
-                    {!loading && !error && viewMode === 'messages' && (
+                    {!loading && !error && sortedEmails.length > 0 && viewMode === 'messages' && (
                         <div className="p-6">
                             <div className="space-y-4">
                                 {sortedEmails.map((email, index) => (
@@ -1177,7 +1419,7 @@ export default function App() {
                                                     </div>
                                                 </div>
                                                 <button
-                                                    onClick={(e) => handleDeleteClick(email.id, e)}
+                                                    onClick={(e) => handleDeleteClick(email.email, e)}
                                                     className={`p-2 rounded-lg transition-all duration-300 ${
                                                         darkMode
                                                             ? 'text-red-400 hover:bg-red-900 hover:text-red-300'
@@ -1210,6 +1452,163 @@ export default function App() {
                             </div>
                         </div>
                     )}
+
+                    {/* Statistics Dashboard */}
+                    {!loading && !error && viewMode === 'stats' && stats && (
+                        <div className="p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                                {/* Total Submissions Card */}
+                                <div className={`p-6 rounded-xl shadow-lg ${
+                                    darkMode ? 'bg-gradient-to-br from-blue-900 to-blue-800' : 'bg-gradient-to-br from-blue-500 to-blue-600'
+                                }`}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <Mail className="w-8 h-8 text-white opacity-80" />
+                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                            darkMode ? 'bg-blue-700' : 'bg-blue-400'
+                                        } text-white`}>
+                                            Total
+                                        </div>
+                                    </div>
+                                    <h3 className="text-3xl font-bold text-white mb-1">{stats.totalSubmissions}</h3>
+                                    <p className="text-blue-100 text-sm">Total Submissions</p>
+                                </div>
+
+                                {/* Last 7 Days Card */}
+                                <div className={`p-6 rounded-xl shadow-lg ${
+                                    darkMode ? 'bg-gradient-to-br from-green-900 to-green-800' : 'bg-gradient-to-br from-green-500 to-green-600'
+                                }`}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <TrendingUp className="w-8 h-8 text-white opacity-80" />
+                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                            darkMode ? 'bg-green-700' : 'bg-green-400'
+                                        } text-white`}>
+                                            Recent
+                                        </div>
+                                    </div>
+                                    <h3 className="text-3xl font-bold text-white mb-1">{stats.last7Days}</h3>
+                                    <p className="text-green-100 text-sm">Last 7 Days</p>
+                                </div>
+
+                                {/* Peak Hour Card */}
+                                <div className={`p-6 rounded-xl shadow-lg ${
+                                    darkMode ? 'bg-gradient-to-br from-purple-900 to-purple-800' : 'bg-gradient-to-br from-purple-500 to-purple-600'
+                                }`}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <Clock className="w-8 h-8 text-white opacity-80" />
+                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                            darkMode ? 'bg-purple-700' : 'bg-purple-400'
+                                        } text-white`}>
+                                            Peak
+                                        </div>
+                                    </div>
+                                    <h3 className="text-3xl font-bold text-white mb-1">
+                                        {stats.peakHour ? `${stats.peakHour[0]}:00` : 'N/A'}
+                                    </h3>
+                                    <p className="text-purple-100 text-sm">
+                                        Peak Hour ({stats.peakHour ? stats.peakHour[1] : 0} emails)
+                                    </p>
+                                </div>
+
+                                {/* Business Types Card */}
+                                <div className={`p-6 rounded-xl shadow-lg ${
+                                    darkMode ? 'bg-gradient-to-br from-orange-900 to-orange-800' : 'bg-gradient-to-br from-orange-500 to-orange-600'
+                                }`}>
+                                    <div className="flex items-center justify-between mb-2">
+                                        <Briefcase className="w-8 h-8 text-white opacity-80" />
+                                        <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                            darkMode ? 'bg-orange-700' : 'bg-orange-400'
+                                        } text-white`}>
+                                            Types
+                                        </div>
+                                    </div>
+                                    <h3 className="text-3xl font-bold text-white mb-1">
+                                        {Object.keys(stats.businessTypes).length}
+                                    </h3>
+                                    <p className="text-orange-100 text-sm">Business Types</p>
+                                </div>
+                            </div>
+
+                            {/* Top Businesses */}
+                            <div className={`p-6 rounded-xl shadow-lg mb-6 ${
+                                darkMode ? 'bg-gray-800' : 'bg-white'
+                            }`}>
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Users className={`w-6 h-6 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                                    <h3 className={`text-xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+                                        Top 5 Business Types
+                                    </h3>
+                                </div>
+                                <div className="space-y-3">
+                                    {stats.topBusinesses.map(([business, count], index) => (
+                                        <div key={business} className="flex items-center gap-3">
+                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                                                index === 0 ? 'bg-yellow-500 text-white' :
+                                                index === 1 ? 'bg-gray-400 text-white' :
+                                                index === 2 ? 'bg-orange-600 text-white' :
+                                                darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'
+                                            }`}>
+                                                {index + 1}
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className={`text-sm font-medium ${darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                                    {business}
+                                                </div>
+                                                <div className={`w-full h-2 rounded-full mt-1 ${
+                                                    darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                                                }`}>
+                                                    <div 
+                                                        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-600"
+                                                        style={{ width: `${(count / stats.totalSubmissions) * 100}%` }}
+                                                    ></div>
+                                                </div>
+                                            </div>
+                                            <div className={`text-lg font-bold ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                {count}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Submissions by Date */}
+                            <div className={`p-6 rounded-xl shadow-lg ${
+                                darkMode ? 'bg-gray-800' : 'bg-white'
+                            }`}>
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Activity className={`w-6 h-6 ${darkMode ? 'text-green-400' : 'text-green-600'}`} />
+                                    <h3 className={`text-xl font-bold ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+                                        Submissions by Date (Last 10 Days)
+                                    </h3>
+                                </div>
+                                <div className="space-y-2">
+                                    {Object.entries(stats.submissionsByDate)
+                                        .sort((a, b) => new Date(b[0]) - new Date(a[0]))
+                                        .slice(0, 10)
+                                        .map(([date, count]) => (
+                                            <div key={date} className="flex items-center gap-3">
+                                                <div className={`w-24 text-sm font-medium ${
+                                                    darkMode ? 'text-gray-400' : 'text-gray-600'
+                                                }`}>
+                                                    {date}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className={`w-full h-8 rounded-lg ${
+                                                        darkMode ? 'bg-gray-700' : 'bg-gray-200'
+                                                    }`}>
+                                                        <div 
+                                                            className="h-full rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-end pr-3"
+                                                            style={{ width: `${(count / Math.max(...Object.values(stats.submissionsByDate))) * 100}%` }}
+                                                        >
+                                                            <span className="text-white text-sm font-bold">{count}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -1221,43 +1620,94 @@ export default function App() {
                     }`}>
                         <div className="flex items-center gap-3 mb-4">
                             <div className={`p-3 rounded-full ${
-                                darkMode ? 'bg-red-900' : 'bg-red-100'
+                                deleteStatus === 'success' 
+                                    ? 'bg-green-100' 
+                                    : deleteStatus === 'error'
+                                    ? 'bg-red-100'
+                                    : darkMode ? 'bg-red-900' : 'bg-red-100'
                             }`}>
                                 <Trash2 className={`w-6 h-6 ${
-                                    darkMode ? 'text-red-400' : 'text-red-600'
+                                    deleteStatus === 'success'
+                                        ? 'text-green-600'
+                                        : deleteStatus === 'error'
+                                        ? 'text-red-600'
+                                        : darkMode ? 'text-red-400' : 'text-red-600'
                                 }`} />
                             </div>
                             <h3 className={`text-xl font-bold ${
                                 darkMode ? 'text-gray-100' : 'text-gray-900'
                             }`}>
-                                Delete Email
+                                {deleteStatus === 'success' ? 'Success!' : deleteStatus === 'error' ? 'Error' : 'Delete Email'}
                             </h3>
                         </div>
                         
-                        <p className={`mb-6 ${
-                            darkMode ? 'text-gray-300' : 'text-gray-600'
-                        }`}>
-                            Are you sure you want to delete this email submission? This action cannot be undone.
-                        </p>
+                        {deleteStatus ? (
+                            <div className={`mb-6 p-4 rounded-lg ${
+                                deleteStatus === 'success'
+                                    ? 'bg-green-50 border border-green-200'
+                                    : deleteStatus === 'error'
+                                    ? 'bg-red-50 border border-red-200'
+                                    : 'bg-blue-50 border border-blue-200'
+                            }`}>
+                                <p className={`font-medium ${
+                                    deleteStatus === 'success'
+                                        ? 'text-green-800'
+                                        : deleteStatus === 'error'
+                                        ? 'text-red-800'
+                                        : 'text-blue-800'
+                                }`}>
+                                    {deleteMessage}
+                                </p>
+                            </div>
+                        ) : (
+                            <p className={`mb-6 ${
+                                darkMode ? 'text-gray-300' : 'text-gray-600'
+                            }`}>
+                                Are you sure you want to delete this email submission? This action cannot be undone.
+                            </p>
+                        )}
                         
-                        <div className="flex gap-3 justify-end">
-                            <button
-                                onClick={cancelDelete}
-                                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                                    darkMode
-                                        ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                }`}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-all duration-300"
-                            >
-                                Delete
-                            </button>
-                        </div>
+                        {!deleteStatus && (
+                            <div className="flex gap-3 justify-end">
+                                <button
+                                    onClick={cancelDelete}
+                                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                                        darkMode
+                                            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                    }`}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={confirmDelete}
+                                    className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-all duration-300"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        )}
+                        
+                        {deleteStatus === 'deleting' && (
+                            <div className="flex justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            </div>
+                        )}
+                        
+                        {deleteStatus === 'error' && (
+                            <div className="flex justify-end">
+                                <button
+                                    onClick={cancelDelete}
+                                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
+                                        darkMode
+                                            ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                    }`}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
@@ -1343,3 +1793,4 @@ export default function App() {
         </div>
     );
 }
+

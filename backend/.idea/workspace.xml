@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
+    <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e88884fa-e477-4ac8-bb26-de23e27b5756" name="Changes" comment="" />
+    <list default="true" id="e88884fa-e477-4ac8-bb26-de23e27b5756" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/Login/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emaildataview/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Controller/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Dao/EmailDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Dao/EmailDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/DataSkeleton/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/DataSkeleton/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/EmaildataviewApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/EmaildataviewApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/resources/application.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -21,24 +40,56 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="34bzWI0ChKElzRw9Mmp3XmArUVH" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.EmaildataviewApplication.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/wedson/Desktop/emailapp/backend",
-    "settings.editor.selected.configurable": "preferences.general"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.EmaildataviewApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/wedson/Desktop/emailapp/backend&quot;,
+    &quot;settings.build.tools.auto.reload&quot;: &quot;ALL&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration name="EmaildataviewApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.emails.emaildataview.EmaildataviewApplication" />
+      <module name="emaildataview" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.emails.emaildataview.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.EmaildataviewApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.26830.84" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="e88884fa-e477-4ac8-bb26-de23e27b5756" name="Changes" comment="" />

@@ -6,13 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="d493fc5f-23ad-4831-84d7-437738a747fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/Login/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/main.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/emaildataview/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/LoginController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Dao/EmailDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Dao/EmailDao.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/DataSkeleton/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/DataSkeleton/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/EmaildataviewApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/EmaildataviewApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -44,24 +51,27 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/wedson/Desktop/ThumbejaPublicity",
+    "last_opened_file_path": "C:/Users/Thumbeja/thumbejaprojects/emaildashboard/custom_email_app",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.general",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/snap/webstorm/541/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2025.2.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.27397.92" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
       </set>
     </attachedChunks>
   </component>
@@ -76,10 +86,23 @@
       <workItem from="1761534241400" duration="1713000" />
       <workItem from="1761619714577" duration="3744000" />
       <workItem from="1762672511054" duration="8533000" />
+      <workItem from="1762755534353" duration="54000" />
+      <workItem from="1762762494581" duration="13276000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
