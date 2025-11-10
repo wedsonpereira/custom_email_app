@@ -1,35 +1,32 @@
 package com.emails.emaildataview.DataSkeleton;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @ToString
-@Table(name = "client")
+@Document(collection = "clients")
 public class Client {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "business")
-    private String company_name;
+    private String business;
 
-    @Column(name = "phone")
-    private long phone;
+    private String contact;
 
-    @Column(name = "message")
     private String message;
 
+    private String date;
+
+    private String time;
 
 }
