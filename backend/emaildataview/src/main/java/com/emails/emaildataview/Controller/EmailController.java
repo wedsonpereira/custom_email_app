@@ -104,11 +104,11 @@ public class EmailController {
     }
 }
 
-// DTO for delete request
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-class EmailDeleteRequest {
-    private String email;
-}
+    // DTO for delete request
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    class EmailDeleteRequest {
+        private String email;
+    }
