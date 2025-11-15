@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Mail, ChevronDown, ChevronUp, User, Briefcase, Phone, MessageSquare, Calendar, Clock, Filter, Layers, ArrowUpDown, Search, X, Moon, Sun, Trash2, Grid, List, LayoutGrid, FileText, RefreshCw, Download, BarChart3, TrendingUp, Users, Activity } from 'lucide-react';
 import axios from 'axios';
 
-    const API_BASE_URL = 'http://localhost:8080/api/emails';
+    const API_BASE_URL = 'https://enquiry.thumbeja.com/api/api/emails';
 
 export default function App() {
     const [emails, setEmails] = useState([]);
@@ -214,7 +214,7 @@ export default function App() {
         try {
             console.log('Deleting email:', deleteConfirm);
             
-            const response = await axios.delete("http://localhost:8080/api/contactdelete", {
+            const response = await axios.delete("https://enquiry.thumbeja.com/api/api/contactdelete  ", {
                 data: { email: deleteConfirm },
                 headers: {
                     'Content-Type': 'application/json'

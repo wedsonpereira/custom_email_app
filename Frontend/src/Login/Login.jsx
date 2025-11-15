@@ -17,7 +17,7 @@ const Login = ({ onLoginSuccess }) => {
             formData.append('username', username);
             formData.append('password', password);
 
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            const response = await fetch('https://enquiry.thumbeja.com/api/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -27,11 +27,23 @@ const Login = ({ onLoginSuccess }) => {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                onLoginSuccess(data.username);
+                // Check if response has content before parsing JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    onLoginSuccess(data.username || username);
+                } else {
+                    // If no JSON response, just use the username from form
+                    onLoginSuccess(username);
+                }
             } else {
-                const errorData = await response.json();
-                setError(errorData.error || 'Login failed');
+                // Try to parse error response, fallback to status text
+                try {
+                    const errorData = await response.json();
+                    setError(errorData.error || 'Login failed');
+                } catch {
+                    setError(`Login failed: ${response.status} ${response.statusText}`);
+                }
             }
         } catch (err) {
             setError('Unable to connect to server');

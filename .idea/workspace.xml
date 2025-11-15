@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d493fc5f-23ad-4831-84d7-437738a747fe" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/Login/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/emaildataview/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Dao/EmailDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Dao/EmailDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/DataSkeleton/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/DataSkeleton/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/EmaildataviewApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/EmaildataviewApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="d493fc5f-23ad-4831-84d7-437738a747fe" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,7 +70,7 @@
       <workItem from="1761619714577" duration="3744000" />
       <workItem from="1762672511054" duration="8533000" />
       <workItem from="1762755534353" duration="54000" />
-      <workItem from="1762762494581" duration="13276000" />
+      <workItem from="1762762494581" duration="13447000" />
     </task>
     <servers />
   </component>

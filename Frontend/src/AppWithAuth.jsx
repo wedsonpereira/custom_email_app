@@ -91,7 +91,7 @@ export default function AppWithAuth() {
 
     const checkAuthStatus = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/auth/status', {
+            const response = await fetch('https://enquiry.thumbeja.com/api/api/auth/status', {
                 credentials: 'include',
             });
             
@@ -116,7 +116,7 @@ export default function AppWithAuth() {
 
     const handleLogout = async () => {
         try {
-            await fetch('http://localhost:8080/api/auth/logout', {
+            await fetch('https://enquiry.thumbeja.com/api/api/auth/logout', {
                 method: 'POST',
                 credentials: 'include',
             });

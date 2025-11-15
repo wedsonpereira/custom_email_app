@@ -6,20 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e88884fa-e477-4ac8-bb26-de23e27b5756" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/Login/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/main.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emaildataview/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Dao/EmailDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Dao/EmailDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/DataSkeleton/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/DataSkeleton/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/EmaildataviewApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/EmaildataviewApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/emaildataview/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/emaildataview/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
