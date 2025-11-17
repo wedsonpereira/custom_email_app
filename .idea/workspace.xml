@@ -6,11 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="d493fc5f-23ad-4831-84d7-437738a747fe" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/App.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/AppWithAuth.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/AppWithAuth.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Frontend/src/Login/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/src/Login/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/vite.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Controller/EmailController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/java/com/emails/emaildataview/Security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/emaildataview/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/emaildataview/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +66,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.27397.92" />
       </set>
     </attachedChunks>
   </component>
@@ -78,7 +83,7 @@
       <workItem from="1762672511054" duration="8533000" />
       <workItem from="1762755534353" duration="54000" />
       <workItem from="1762762494581" duration="13447000" />
-      <workItem from="1763196210682" duration="38000" />
+      <workItem from="1763268576907" duration="8761000" />
     </task>
     <servers />
   </component>

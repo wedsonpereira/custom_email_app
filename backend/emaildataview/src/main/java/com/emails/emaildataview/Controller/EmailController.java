@@ -26,11 +26,30 @@ public class EmailController {
     @GetMapping("/emails")
     public ResponseEntity<List<Client>> getAllClients() {
         try {
+            log.info("=== Fetching all clients from MongoDB ===");
             List<Client> clients = emailDao.findAll();
-            System.out.println(clients);
+            log.info("Found {} clients", clients.size());
+            System.out.println("Clients: " + clients);
             return ResponseEntity.ok(clients);
         } catch (Exception e) {
+            log.error("Error fetching clients from MongoDB", e);
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/test-db")
+    public ResponseEntity<?> testDatabaseConnection() {
+        try {
+            log.info("=== Testing MongoDB Connection ===");
+            long count = emailDao.count();
+            log.info("Database connection successful. Total documents: {}", count);
+            return ResponseEntity.ok("{\"status\":\"connected\",\"count\":" + count + ",\"database\":\"emailreplies\",\"collection\":\"clients\"}");
+        } catch (Exception e) {
+            log.error("Database connection failed", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("{\"status\":\"error\",\"message\":\"" + e.getMessage() + "\"}");
         }
     }
 
@@ -104,11 +123,11 @@ public class EmailController {
     }
 }
 
-// DTO for delete request
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-class EmailDeleteRequest {
-    private String email;
-}
+    // DTO for delete request
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    class EmailDeleteRequest {
+        private String email;
+    }

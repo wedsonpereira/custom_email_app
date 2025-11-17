@@ -1,0 +1,19 @@
+# .htaccess for Spring Boot Backend
+# Upload this file to: public_html/spring/.htaccess
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Proxy all requests to Spring Boot running on port 8080
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ http://localhost:8080/$1 [P,L]
+</IfModule>
+
+# Enable CORS headers
+<IfModule mod_headers.c>
+  Header set Access-Control-Allow-Origin "https://enquiry.thumbeja.com"
+  Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+  Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+  Header set Access-Control-Allow-Credentials "true"
+</IfModule>

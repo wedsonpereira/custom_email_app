@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from
 import { LogOut } from 'lucide-react';
 import Login from './Login/Login';
 import App from './App';
+import { API_ENDPOINTS } from './config/api';
 
 function ProtectedRoute({ children, isAuthenticated, checkingAuth }) {
     const location = useLocation();
@@ -91,7 +92,7 @@ export default function AppWithAuth() {
 
     const checkAuthStatus = async () => {
         try {
-            const response = await fetch('https://enquiry.thumbeja.com/api/api/auth/status', {
+            const response = await fetch(API_ENDPOINTS.AUTH.STATUS, {
                 credentials: 'include',
             });
             
@@ -116,7 +117,7 @@ export default function AppWithAuth() {
 
     const handleLogout = async () => {
         try {
-            await fetch('https://enquiry.thumbeja.com/api/api/auth/logout', {
+            await fetch(API_ENDPOINTS.AUTH.LOGOUT, {
                 method: 'POST',
                 credentials: 'include',
             });

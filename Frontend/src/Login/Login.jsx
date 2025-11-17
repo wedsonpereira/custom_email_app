@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail, Lock, User, AlertCircle } from 'lucide-react';
+import { API_ENDPOINTS } from '../config/api';
 
 const Login = ({ onLoginSuccess }) => {
     const [username, setUsername] = useState('');
@@ -17,7 +18,7 @@ const Login = ({ onLoginSuccess }) => {
             formData.append('username', username);
             formData.append('password', password);
 
-            const response = await fetch('https://enquiry.thumbeja.com/api/api/auth/login', {
+            const response = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
