@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Mail, ChevronDown, ChevronUp, User, Briefcase, Phone, MessageSquare, Calendar, Clock, Filter, Layers, ArrowUpDown, Search, X, Moon, Sun, Trash2, Grid, List, LayoutGrid, FileText, RefreshCw, Download, BarChart3, TrendingUp, Users, Activity } from 'lucide-react';
 import axios from 'axios';
-
-    const API_BASE_URL = 'https://enquiry.thumbeja.com/api/api/emails';
+import { API_ENDPOINTS } from './config/api';
 
 export default function App() {
     const [emails, setEmails] = useState([]);
@@ -92,11 +91,11 @@ export default function App() {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(API_BASE_URL, {
+            const response = await fetch(API_ENDPOINTS.EMAILS, {
                 credentials: 'include',
             });
             if (!response.ok) {
-                throw new Error('Failed to fetch clients');
+                throw new Error(`Failed to fetch clients: ${response.status} ${response.statusText}`);
             }
             const data = await response.json();
             // Map backend data to frontend format
@@ -214,7 +213,7 @@ export default function App() {
         try {
             console.log('Deleting email:', deleteConfirm);
             
-            const response = await axios.delete("https://enquiry.thumbeja.com/api/api/contactdelete  ", {
+            const response = await axios.delete(API_ENDPOINTS.CONTACT.DELETE, {
                 data: { email: deleteConfirm },
                 headers: {
                     'Content-Type': 'application/json'
