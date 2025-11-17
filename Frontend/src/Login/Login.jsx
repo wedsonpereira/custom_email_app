@@ -27,23 +27,33 @@ const Login = ({ onLoginSuccess }) => {
                 credentials: 'include',
             });
 
-            if (response.ok) {
-                // Check if response has content before parsing JSON
+            // Only proceed if response is OK (200)
+            if (response.ok && response.status === 200) {
+                // Must have JSON response with username
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
-                    const data = await response.json();
-                    onLoginSuccess(data.username || username);
+                    try {
+                        const data = await response.json();
+                        // Validate that we got a proper response
+                        if (data && data.username) {
+                            onLoginSuccess(data.username);
+                        } else {
+                            setError('Invalid server response. Please try again.');
+                        }
+                    } catch (jsonError) {
+                        console.error('JSON parse error:', jsonError);
+                        setError('Invalid server response format.');
+                    }
                 } else {
-                    // If no JSON response, just use the username from form
-                    onLoginSuccess(username);
+                    setError('Server returned invalid response type.');
                 }
             } else {
-                // Try to parse error response, fallback to status text
+                // Authentication failed
                 try {
                     const errorData = await response.json();
-                    setError(errorData.error || 'Login failed');
+                    setError(errorData.error || 'Invalid username or password');
                 } catch {
-                    setError(`Login failed: ${response.status} ${response.statusText}`);
+                    setError('Invalid username or password');
                 }
             }
         } catch (err) {

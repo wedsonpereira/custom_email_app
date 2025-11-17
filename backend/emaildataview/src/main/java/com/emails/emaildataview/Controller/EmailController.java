@@ -16,7 +16,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(value = "*")
 @Slf4j
 public class EmailController {
 
@@ -81,31 +80,37 @@ public class EmailController {
     @DeleteMapping("/contactdelete")
     public ResponseEntity<?> deleteContactByEmail(@RequestBody EmailDeleteRequest request) {
         try {
-            String email = request.getEmail();
+            log.info("=== Delete Contact Request Received ===");
+            log.info("Request object: {}", request);
             
-            if (email == null || email.trim().isEmpty()) {
-                System.out.println("Error: Email is required");
-                return ResponseEntity.badRequest().body("{\"error\":\"Email is required\"}");
+            if (request == null) {
+                log.error("Request is null");
+                return ResponseEntity.badRequest().body("{\"error\":\"Invalid request\"}");
             }
             
-            System.out.println("=== Delete Contact Request ===");
-            System.out.println("Email to delete: " + email);
+            String email = request.getEmail();
+            log.info("Email to delete: {}", email);
+            
+            if (email == null || email.trim().isEmpty()) {
+                log.error("Email is null or empty");
+                return ResponseEntity.badRequest().body("{\"error\":\"Email is required\"}");
+            }
             
             Client client = emailDao.findByEmail(email);
             
             if (client == null) {
-                System.out.println("Client not found with email: " + email);
+                log.warn("Client not found with email: {}", email);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("{\"error\":\"Client not found with email: " + email + "\"}");
             }
             
+            log.info("Found client with ID: {}, deleting...", client.getId());
             emailDao.delete(client);
-            System.out.println("Successfully deleted client with email: " + email);
+            log.info("Successfully deleted client with email: {}", email);
             
             return ResponseEntity.ok("{\"message\":\"Client deleted successfully\"}");
         } catch (Exception e) {
-            System.err.println("Error deleting contact: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error deleting contact", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("{\"error\":\"Failed to delete client: " + e.getMessage() + "\"}");
         }
@@ -123,11 +128,12 @@ public class EmailController {
     }
 }
 
-    // DTO for delete request
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    class EmailDeleteRequest {
-        private String email;
-    }
+
+// DTO for delete request
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+class EmailDeleteRequest {
+    private String email;
+}

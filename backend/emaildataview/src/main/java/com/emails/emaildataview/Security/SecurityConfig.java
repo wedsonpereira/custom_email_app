@@ -30,7 +30,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/login", "/api/auth/status", "/api/contact", "/api/test-db").permitAll()
+                .requestMatchers("/api/auth/**", "/api/contact", "/api/contactdelete").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -87,16 +87,34 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of(
-            "https://enquiry.thumbeja.com","http://localhost:5173"
+        // Configuration for public endpoints (contact form)
+        CorsConfiguration publicConfig = new CorsConfiguration();
+        publicConfig.setAllowedOriginPatterns(List.of("*"));  // Allow all origins for public endpoint
+        publicConfig.setAllowedMethods(List.of("POST", "OPTIONS"));
+        publicConfig.setAllowedHeaders(List.of("*"));
+        publicConfig.setExposedHeaders(List.of("*"));
+        publicConfig.setAllowCredentials(false);  // No credentials for public
+        publicConfig.setMaxAge(3600L);
+        
+        // Configuration for authenticated endpoints
+        CorsConfiguration authConfig = new CorsConfiguration();
+        authConfig.setAllowedOrigins(List.of(
+            "https://enquiry.thumbeja.com",
+            "https://thumbeja.com",
+            "https://www.thumbeja.com",
+            "http://localhost:5173",
+            "http://localhost:3000"
         ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
+        authConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        authConfig.setAllowedHeaders(List.of("*"));
+        authConfig.setExposedHeaders(List.of("*"));
+        authConfig.setAllowCredentials(true);
+        authConfig.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/contact", publicConfig);  // Public endpoint
+        source.registerCorsConfiguration("/api/contactdelete", publicConfig);  // Public endpoint
+        source.registerCorsConfiguration("/api/**", authConfig);  // All other endpoints
         return source;
     }
 

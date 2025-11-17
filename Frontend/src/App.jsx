@@ -91,12 +91,40 @@ export default function App() {
         try {
             setLoading(true);
             setError(null);
-            const response = await fetch(API_ENDPOINTS.EMAILS, {
+            
+            console.log('Fetching from:', API_ENDPOINTS.EMAILS.LIST);
+            
+            const response = await fetch(API_ENDPOINTS.EMAILS.LIST, {
+                method: 'GET',
                 credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                },
             });
+            
+            console.log('Response status:', response.status);
+            console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+            
             if (!response.ok) {
+                // Check if we're getting HTML (redirect to login)
+                const contentType = response.headers.get('content-type');
+                console.log('Content-Type:', contentType);
+                
+                if (contentType && contentType.includes('text/html')) {
+                    // Session expired or not authenticated
+                    window.location.href = '/login';
+                    throw new Error('Session expired. Please login again.');
+                }
                 throw new Error(`Failed to fetch clients: ${response.status} ${response.statusText}`);
             }
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const text = await response.text();
+                console.error('Non-JSON response:', text.substring(0, 200));
+                throw new Error('Server returned non-JSON response');
+            }
+            
             const data = await response.json();
             // Map backend data to frontend format
             const mappedData = data.map(client => ({
@@ -213,7 +241,7 @@ export default function App() {
         try {
             console.log('Deleting email:', deleteConfirm);
             
-            const response = await axios.delete(API_ENDPOINTS.CONTACT.DELETE, {
+            const response = await axios.delete(API_ENDPOINTS.EMAILS.DELETE, {
                 data: { email: deleteConfirm },
                 headers: {
                     'Content-Type': 'application/json'

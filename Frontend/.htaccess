@@ -3,6 +3,7 @@
   RewriteBase /
   
   # Proxy Spring Boot API requests to backend on port 8080
+  # Preserve cookies and headers
   RewriteCond %{REQUEST_URI} ^/spring/
   RewriteRule ^spring/(.*)$ http://127.0.0.1:8080/$1 [P,L,QSA]
   
@@ -15,10 +16,22 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
-# Enable proxy modules (if not already enabled)
+# Proxy configuration
 <IfModule mod_proxy.c>
   ProxyPreserveHost On
   ProxyRequests Off
+  
+  # Pass cookies correctly
+  ProxyPassReverse / http://127.0.0.1:8080/
+  ProxyPassReverseCookiePath / /
+</IfModule>
+
+# CORS Headers - Let Spring handle CORS, don't override
+<IfModule mod_headers.c>
+  # Don't add CORS headers here - Spring Security handles it
+  # Just ensure headers are passed through the proxy
+  RequestHeader set X-Forwarded-Proto "https"
+  RequestHeader set X-Forwarded-Host "enquiry.thumbeja.com"
 </IfModule>
 
 # Enable GZIP compression
